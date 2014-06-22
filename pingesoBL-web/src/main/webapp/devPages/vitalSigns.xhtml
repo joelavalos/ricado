@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <h:outputStylesheet name="./css/default.css"/>
+        <h:outputScript name="js/fullScreen.js" />
+        <title>Episodios</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:commandButton value="Ingresar Signos Vitales" onclick="PF('searchPatientVitalSignsWV').show();" type="button" />
+        </h:form>
+        <h:form id="searchPatientVitalSignsForm">
+            <p:dialog header="Buscar Paciente (Ingresar Signos Vitales)" id="searchPatientVitalSigns" widgetVar="searchPatientVitalSignsWV" minimizable="true">
+                <p:panelGrid styleClass="panelGridForm" columns="1">
+                    <p:dataTable var="person"  value="#{searchPatientVS.person}" widgetVar="personDT" 
+                                 emptyMessage="No se registran pacientes" filteredValue="#{searchPatientVS.filterPerson}"
+                                 selectionMode="single" selection="#{addVitalSigns.selectedPerson}" rowKey="#{person}"
+                                 style="width: 500px;" scrollHeight="300" scrollable="true">
+                        <f:facet name="header">
+                            <h:outputText value="Buscar: " />
+                            <p:inputText id="globalFilter" onkeyup="PF('personDT').filter()" style="width:150px"/>
+                        </f:facet>
+                        <p:column headerText="ID" sortBy="#{person.idPersona}" filterBy="#{person.idPersona}">
+                            <h:outputText value="#{person.idPersona}" />
+                        </p:column>
+                        <p:column headerText="RUT" sortBy="#{person.persRut}" filterBy="#{person.persRut}">
+                            <h:outputText value="#{person.persRut}" />
+                        </p:column>
+                        <p:column headerText="Nombre" sortBy="#{person.persNombres} #{person.persApepaterno} #{person.persApematerno}" filterBy="#{person.persNombres} #{person.persApepaterno} #{person.persApematerno}">
+                            <h:outputText value="#{person.persNombres} #{person.persApepaterno} #{person.persApematerno}" />
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton   icon="ui-icon-check" value="Seleccionar" oncomplete="patientVitalSignsWV.show()" 
+                                               actionListener="#{addVitalSigns.addVS}" update=":patientVitalSignsForm" />
+                            <p:commandButton   icon="ui-icon-cancel" value="cancelar" />                               
+                        </f:facet> 
+                    </p:dataTable>
+                </p:panelGrid>
+            </p:dialog>
+        </h:form>
+
+        <h:form id="patientVitalSignsForm">
+            <p:dialog header="Ingresar Signos Vitales" id="patientVitalSigns" widgetVar="patientVitalSignsWV" minimizable="true">
+                <p:panelGrid styleClass="panelGridForm" columns="2">
+                    <p:outputLabel value="Nombre:" style="font-weight: bold"/>
+                    <p:outputLabel value="#{addVitalSigns.name}" style="font-weight: bold"/>
+                    <p:outputLabel value="Rut:" style="font-weight: bold"/>
+                    <p:outputLabel value="#{addVitalSigns.rut}" style="font-weight: bold"/>
+
+                </p:panelGrid>
+
+                <p:panelGrid styleClass="panelGridForm" columns="3"  >                    
+                    <p:outputLabel value="Temperatura:"/>
+                    <p:inputText id="temperature" value="#{addVitalSigns.temperature}"/>
+                    <p:outputLabel value="°c"/>
+                    <p:outputLabel value="Pulso:"/>
+                    <p:inputText id="pulse" value="#{addVitalSigns.pulse}" />
+                    <p:outputLabel value="pusl/min"/>
+                    <p:outputLabel value="Altura:"/>
+                    <p:inputText id="height" value="#{addVitalSigns.height}"/>
+                    <p:outputLabel value="cm"/>
+                    <p:outputLabel value="Presión Diastólica:"/>
+                    <p:inputText id="diastolicPressure" value="#{addVitalSigns.diastolicPressure}"/>
+                    <p:outputLabel value="mmHg"/>
+                    <p:outputLabel value="Presión Sistólica:"/>
+                    <p:inputText id="systolicPressure" value="#{addVitalSigns.systolicPressure}"/>
+                    <p:outputLabel value="mmHg"/>
+                    <p:outputLabel value="Peso:"/>
+                    <p:inputText id="weight" value="#{addVitalSigns.systolicPressure}"/>
+                    <p:outputLabel value="kg"/>
+                    <p:outputLabel value="Sat O2:"/>
+                    <p:inputText id="satO2" value="#{addVitalSigns.satO2}"/>
+                    <p:outputLabel value="%"/>
+                </p:panelGrid>
+                <p:panelGrid styleClass="panelGridForm" columns="2">
+                    <p:selectOneMenu value="#{addVitalSigns.idVitalSings}" id="vitalSignsList"> 
+                        <f:selectItem itemLabel="Seleccione" itemValue="0"/>
+                        <f:selectItems value="#{addVitalSigns.searchVitalSigns}" var="signs" itemLabel="#{signs.nombreSvital}" itemValue="#{signs.idSvitales}"/>  
+                    </p:selectOneMenu>
+                    <p:inputText id="otherSigns" value="#{addVitalSigns.otherSigns}"/>
+                </p:panelGrid>
+                <p:panelGrid styleClass="panelGridForm" columns="2">
+                    <p:commandButton id="finished" value="Terminar"/> 
+                </p:panelGrid>
+            </p:dialog>
+        </h:form>
+
+    </h:body>
+</html>

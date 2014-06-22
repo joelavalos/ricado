@@ -1,0 +1,408 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- TO-DO: Actualizar lista de diagnosticos automaticamente al agregar -->
+<!-- TO-DO: Agregar historia clinica a consultas -->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <h:outputStylesheet name="./css/default.css"/>
+        <h:outputScript name="js/fullScreen.js" />
+        <title>Barros Luco GrupoUNO</title>
+    </h:head>
+    <h:body style="background-image: url(resources/images/background.jpg);background-repeat: repeat;">
+        <h:form>
+            <p:menubar>
+                <f:facet name="options">
+                    <p:outputLabel value="Doctor: " style="font-weight: 800"/>
+                    <p:outputLabel value="#{index.doctorName} " id="doctorName" style="font-weight: bold" />
+                    <p:commandButton type="button" onclick="toggleFullscreen(document.documentElement)" icon="ui-icon-extlink" />
+                </f:facet>
+                <p:menuitem value="Consulta Médica" onclick="consultation.show()" styleClass="open" icon="ui-icon ui-icon-document"></p:menuitem>
+            </p:menubar>
+        </h:form>       
+
+        <!--NUEVO DIAGNOSTICO. ID: 0-->
+        <p:dialog header="Nueva Hipótesis Diagnóstica" widgetVar="newDiagnostic" minimizable="true" maximizable="true" closable="true">
+            <p:ajax event="close" listener="#{newDiagnostic.resetInput}" update="newDiagnosticForm" />
+            <p:ajax event="close" listener="#{consultation.buscarDiagnosticos()}" update=":consultationForm"/>
+            <p:ajax event="minimize" listener="#{consultation.buscarDiagnosticos()}" update=":consultationForm"/>
+            <h:form id="newDiagnosticForm">
+                <p:growl for="guau" id="gIndex" showDetail="true" sticky="false" life="6000"/>
+                <p:panelGrid columns="2" styleClass="panelGridForm">
+                    <p:outputLabel value="Patología:" for="pathologyND"/>
+                    <p:autoComplete id="pathologyND" value="#{newDiagnostic.pathology}" completeMethod="#{newDiagnostic.completeTextPathology}">
+                        <p:ajax event="blur" listener ="#{newDiagnostic.warningGest}"/>
+                    </p:autoComplete>
+                    <p:outputLabel value="Estado del Diagnóstico:" for="stateDiagnosticND" />
+                    <p:selectOneMenu id="stateDiagnosticND" value="#{newDiagnostic.stateDiagnostic}">
+                        <p:ajax listener="#{newDiagnostic.warningGest}">
+                        </p:ajax>
+                        <f:selectItem itemLabel="Seleccione un Item" itemValue="" />
+                        <f:selectItem itemLabel="Sospecha" itemValue="sospecha" />
+                        <f:selectItem itemLabel="Confirmado" itemValue="confirmado" />                    
+                    </p:selectOneMenu>               
+                </p:panelGrid>
+                <p:panelGrid columns="1" styleClass="panelGridForm">
+                    <p:outputLabel value="Comentarios:" for="commentsND" />
+                    <p:inputTextarea id="commentsND" widgetVar="textAreaWidget" value="#{newDiagnostic.comments}" cols="50" rows="8" autoResize="false"/>
+                </p:panelGrid>                
+                <div class="btnPanelGrid">
+                    <p:commandButton value="Guardar" icon="ui-icon-disk" actionListener="#{newDiagnostic.createDiagnostic()}" update="newDiagnosticForm"/>
+                    <p:commandButton value="Cancelar" onclick="newDiagnostic.hide();" actionListener="#{newDiagnostic.resetInput}" update="newDiagnosticForm" icon="ui-icon-close"/>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <!--MOSTRAR EVOLUCIÓN CLÍNICA. ID: 1-->
+        <p:dialog header="Mostrar evolución clínica" widgetVar="showClinicalEvolution" minimizable="true" maximizable="true" closable="false">
+            <h:form id="ShowClinicalEvolutionForm">
+                <p:panelGrid columns="2" styleClass="panelGridForm">
+                    <p:outputLabel value="Rut paciente"/>
+                    <p:autoComplete id="autoPatient2" value="#{showClinicalEvolution.rutPatient}" completeMethod="#{showClinicalEvolution.completeRutPatients}" forceSelection="true"/>
+                    <p:commandButton value="Mostrar" actionListener="#{showClinicalEvolution.mostrarClinicalEvolution()}" update="ShowClinicalEvolutionForm"/>
+                </p:panelGrid>
+
+                <p:dataTable id="tablaDiag2" var="medicalHistory" value="#{showClinicalEvolution.allMedicalHistorys}" style="width: 500px; height: 500px">
+                    <f:facet name="header">
+                        Evolución clínica
+                    </f:facet>
+                    <p:column headerText="Número">
+                        <h:outputText value="#{medicalHistory.mhysId}" />
+                    </p:column>
+                    <p:column headerText="Rut paciente">
+                        <h:outputText value="#{medicalHistory.crecId.personId.persons.rut}" />
+                    </p:column>
+                    <p:column headerText="Rut doctor">
+                        <h:outputText value="#{medicalHistory.personId.persons.rut}" />
+                    </p:column>
+                    <p:column headerText="Fecha">
+                        <h:outputText value="#{medicalHistory.mhysDtime.date}/#{medicalHistory.mhysDtime.month+1}/#{medicalHistory.mhysDtime.year-100+2000}" />
+                    </p:column>
+
+
+                </p:dataTable>
+
+                <p:commandButton value="Cerrar" onclick="showClinicalEvolution.hide();" actionListener="#{showClinicalEvolution.resetInput()}" update="ShowClinicalEvolutionForm" icon="ui-icon-close"/>
+
+            </h:form>
+        </p:dialog>
+
+        <!--MOSTRAR DIAGNOSTICOS. ID: 2-->
+        <p:dialog header="Mostrar Diagnosticos" widgetVar="ShowDiagnoses" minimizable="true" maximizable="true" closable="false">
+            <h:form id="ShowDiagnosesForm">
+                <p:panelGrid columns="1" styleClass="panelGridForm">
+                    <p:outputLabel value="Rut paciente"/>
+                    <p:autoComplete id="autoPatient" value="#{showDiagnoses.rutPatient}" completeMethod="#{showDiagnoses.completeRutPatients}" forceSelection="true"/>
+                    <p:commandButton value="Buscar diagnosticos" actionListener="#{showDiagnoses.buscar}" update="tablaDiag" />
+
+                    <p:dataTable id="tablaDiag" var="diagnoses" value="#{showDiagnoses.allDiagnoses}">
+                        <f:facet name="header">
+                            Diagnosticos del paciente
+                        </f:facet>
+                        <p:column headerText="Número hipotesis diagnostica">
+                            <h:outputText value="#{diagnoses.diagId}" />
+                        </p:column>
+                        <p:column headerText="Rut paciente">
+                            <h:outputText value="#{diagnoses.crecId.personId.persons.rut}" />
+                        </p:column>
+                        <p:column headerText="Rut doctor">
+                            <h:outputText value="#{diagnoses.personId.persons.rut}" />
+                        </p:column>
+                        <p:column headerText="Fecha">
+                            <h:outputText value="#{diagnoses.diagDate.date}/#{diagnoses.diagDate.month+1}/#{diagnoses.diagDate.year-100+2000}" />
+                        </p:column>
+
+                        <p:column style="width:4%;text-align: center">
+                            <p:commandButton update=":diagnosticDetailForm" oncomplete="diagnosesShow.show()" icon="ui-icon-search" title="View">
+                                <f:setPropertyActionListener value="#{diagnoses}" target="#{showDiagnoses.selectedDiagnoses}" />
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable>
+                </p:panelGrid>
+                <div class="btnPanelGrid">
+                    <p:commandButton value="Cerrar" onclick="ShowDiagnoses.hide();" actionListener="#{showDiagnoses.resetInput}" update="ShowDiagnosesForm" icon="ui-icon-close"/>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <!-- DETALLE DIAGNÓSTICO. ID: 3 -->
+        <p:dialog header="Detalle Diagnóstico" widgetVar="diagnosesShow" width="500" showEffect="fade" hideEffect="fade" resizable="true" maximizable="true" minimizable="true" closable="true"> 
+            <h:form id="diagnosticDetailForm"> 
+                <p:growl for="woff" id="dIndex" showDetail="true" sticky="false" life="6000"/>
+                <p:panelGrid columns="2" rendered="#{not empty showDiagnoses.selectedDiagnoses}" columnClasses="label,value" styleClass="panelGridForm"> 
+                    <h:outputText value="Registro clínico:" /> 
+                    <h:outputText value="#{showDiagnoses.selectedDiagnoses.crecId.crecId}" /> 
+                    <h:outputText value="ID:"/>
+                    <h:outputText value="#{showDiagnoses.selectedDiagnoses.diagId}" /> 
+                    <h:outputText value="Fecha diagnóstico" /> 
+                    <h:outputText value="#{showDiagnoses.selectedDiagnoses.diagDate.date}/#{showDiagnoses.selectedDiagnoses.diagDate.month+1}/#{showDiagnoses.selectedDiagnoses.diagDate.year+1900}" /> 
+                    <h:outputText value="Patología:" /> 
+                    <p:inplace label="#{showDiagnoses.selectedDiagnoses.disId.disName}"> 
+                        <h:selectOneMenu value="#{showDiagnoses.selectedDiagnoses.disId.disName}" > 
+                            <f:selectItems value="#{showDiagnoses.allDisease}" var="diseasesVar" itemLabel="#{diseasesVar.disName}" itemValue="#{diseasesVar.disName}" /> 
+                        </h:selectOneMenu> 
+                    </p:inplace> 
+                    <h:outputText value="Estado:" /> 
+                    <p:inplace label="#{showDiagnoses.selectedDiagnoses.dstatId.dstatName}"> 
+                        <h:selectOneMenu value="#{showDiagnoses.selectedDiagnoses.dstatId.dstatName}" > 
+                            <f:selectItems value="#{showDiagnoses.allDiagnoseStatus}" var="statusVar" itemLabel="#{statusVar.dstatName}" itemValue="#{statusVar.dstatName}" /> 
+                        </h:selectOneMenu> 
+                    </p:inplace> 
+                    <h:outputText value="Comentarios:" /> 
+                    <p:inplace editor="true"> 
+                        <p:inputTextarea value="#{showDiagnoses.selectedDiagnoses.diagComment}" required="true" label="text" cols="35" rows="3" autoResize="false"/> 
+                    </p:inplace> 
+                </p:panelGrid> 
+                <div class="btnCenterPanelGrid"> 
+                    <p:commandButton actionListener="#{showDiagnoses.lastDiagnoses()}" update="diagnosticDetailForm" icon="ui-icon-triangle-1-w"/> 
+                    <p:commandButton actionListener="#{showDiagnoses.evolveDiagnoses()}" icon="ui-icon-disk"/>
+                    <p:commandButton actionListener="#{showDiagnoses.nextDiagnoses()}" update="diagnosticDetailForm" icon="ui-icon-triangle-1-e"/> 
+                </div> 
+            </h:form> 
+        </p:dialog>
+
+
+        <!-- NUEVA CONSULTA. ID: 4 -->
+        <p:dialog header="Nueva Consulta" widgetVar="consultation" minimizable="true" maximizable="true" closable="true">
+            <p:ajax event="close" listener="#{consultation.resetInput}" update="consultationForm" />
+            <h:form id="consultationForm">
+                <p:growl for="wuff" id="dIndex" showDetail="true" sticky="false" life="6000"/>
+                <p:panelGrid columns="3" styleClass="panelGridForm">
+                    <p:outputLabel value="Rut Paciente: " for="rutCM"/>                            
+                    <p:autoComplete id="rutCM" forceSelection="true" value="#{consultation.rut}" completeMethod="#{consultation.completeTextPatient}" /> 
+                    <p:commandButton value="Seleccionar" id="btnSeleccionarCM" actionListener="#{consultation.selectPatient}" update="consultationForm" icon="ui-icon-check">
+                        <!--Definiendo valores en showDiagnoses. Probablemente se puede hacer de manera mas directa pero lo dejaré así para avanzar-->
+                        <f:setPropertyActionListener target="#{showDiagnoses.rutPatient}" value="#{consultation.rut}"/>
+                        <f:setPropertyActionListener target="#{showDiagnoses.allDiagnoses}" value="#{consultation.allDiagnoses}"/>
+                        <f:setPropertyActionListener target="#{showDiagnoses.allDiagnoseStatus}" value="#{consultation.allDiagnoseStatus}"/>
+                        <f:setPropertyActionListener target="#{showDiagnoses.allDisease}" value="#{consultation.allDisease}"/>
+                        <f:setPropertyActionListener target="#{showClinicalEvolution.allMedicalHistorys}" value="#{consultation.allMedicalHistorys}"/>
+                    </p:commandButton>
+                </p:panelGrid>            
+                <p:panelGrid columns="5" styleClass="panelGridForm">
+                    <p:menubar>
+                        <p:menuitem value="Datos del Paciente" id="btnDataCM" onclick="dataPatient.show()" icon="ui-icon-person" disabled="#{consultation.disableButtons}" action="#{dataPatient.buscar}" update=":dataPatientForm">
+                            <f:setPropertyActionListener target="#{dataPatient.rut}" value="#{consultation.rut}"/>
+                        </p:menuitem>
+                        <p:menuitem value="Diagnóstico" id="btnDiagnosticCM" onclick="newDiagnostic.show()" icon="ui-icon-circle-plus" disabled="#{consultation.disableButtons}">
+                            <f:setPropertyActionListener target="#{newDiagnostic.rut}" value="#{consultation.rut}"/>
+                        </p:menuitem>
+                        <p:menuitem value="Tratamiento" id="btnTreatmentCM" icon="ui-icon-circle-plus" disabled="#{consultation.disableButtons}"/>
+                        <p:menuitem value="Exámenes" id="btnExamsCM" icon="ui-icon-circle-plus" disabled="#{consultation.disableButtons}"/>
+                        <p:menuitem value="Formularios GES" id="btnGesCM" icon="ui-icon-circle-plus" disabled="#{consultation.disableButtons}"/>
+                    </p:menubar>
+                </p:panelGrid>
+                <br/>
+                <p:panelGrid columns="2" styleClass="panelGridForm">
+                    <p:outputLabel value="Paciente: "/>                            
+                    <p:outputLabel value="#{consultation.patientName}" id="name"/>
+                </p:panelGrid>  
+
+                <p:panelGrid style="margin-top:20px" styleClass="panelGridForm">
+                    <p:row>
+                        <p:column colspan="2">Evolución Clínica:</p:column>
+                        <p:column colspan="2">Diagnósticos Anteriores:</p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2" style="vertical-align: top">
+                            <p:inputTextarea value="#{consultation.textHistory}" cols="50" rows="8" autoResize="false" disabled="#{consultation.disableButtons}"/>
+                        </p:column>
+                        <p:column colspan="2" style="vertical-align: top">
+                            <p:dataTable id="resumenDiag" var="diagnoses" value="#{consultation.allDiagnoses}" paginator="true" 
+                                         paginatorPosition="bottom" rows="3" selectionMode="single" rowKey="#{diagnoses}" 
+                                         selection="#{showDiagnoses.selectedDiagnoses}" emptyMessage="El paciente no registra diagnósticos"> 
+                                <p:ajax event="rowSelect" update=":diagnosticDetailForm" oncomplete="diagnosesShow.show()" /> 
+                                <f:facet name="header"> Resumen Diagnósticos anteriores </f:facet> 
+                                <p:column headerText="ID" sortBy="#{diagnoses.diagId}"> 
+                                    <h:outputText value="#{diagnoses.diagId}" /> 
+                                </p:column> 
+                                <p:column headerText="Fecha" sortBy="#{diagnoses.diagDate.date}/#{resDiagnoses.diagDate.month+1}/#{resDiagnoses.diagDate.year-100+2000}"> 
+                                    <h:outputText value="#{diagnoses.diagDate.date}/#{diagnoses.diagDate.month+1}/#{diagnoses.diagDate.year-100+2000}" /> 
+                                </p:column> 
+                                <p:column headerText="Patología" sortBy="#{diagnoses.disId.disName}"> 
+                                    <h:outputText value="#{diagnoses.disId.disName}" /> 
+                                </p:column> 
+                                <p:column headerText="Estado" sortBy="#{diagnoses.dstatId.dstatName}"> 
+                                    <h:outputText value="#{diagnoses.dstatId.dstatName}" /> 
+                                </p:column> 
+                            </p:dataTable>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="4" style="vertical-align: top">
+                            <p:dataTable id="clinicalEvolution" var="evolution" value="#{consultation.allMedicalHistorys}" paginator="true" 
+                                         paginatorPosition="bottom" rows="2" selectionMode="single" rowKey="#{evolution}" 
+                                         selection="#{showClinicalEvolution.selectedMedicalHistory}" emptyMessage="El paciente no registra diagnósticos">
+                                <p:ajax event="rowSelect" update=":viewClinicalEvolutionForm" oncomplete="dialogDetailClinicalEvolution.show()" />
+                                <f:facet name="header"> Resumen Evolución Clínica </f:facet>
+                                <p:column headerText="ID" sortBy="#{evolution.mhysId}"> 
+                                    <h:outputText value="#{evolution.mhysId}" /> 
+                                </p:column>
+                                <p:column headerText="Fecha" sortBy="#{evolution.mhysDtime.date}/#{evolution.mhysDtime.month+1}/#{evolution.mhysDtime.year-100+2000}"> 
+                                    <h:outputText value="#{evolution.mhysDtime.date}/#{evolution.mhysDtime.month+1}/#{evolution.mhysDtime.year-100+2000}" /> 
+                                </p:column> 
+                                <p:column headerText="Contenido"> 
+                                    <h:outputText value="#{evolution.mhistory}" /> 
+                                </p:column> 
+                            </p:dataTable>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:commandButton value="Finalizar" actionListener="#{consultation.createClincalEvolution()}" id="btnGuardarCM" icon="ui-icon-disk" update="consultationForm" disabled="#{consultation.disableButtons}"/>
+                            <p:commandButton value="Cancelar" onclick="consultation.hide();" actionListener="#{consultation.resetInput}" update="consultationForm" icon="ui-icon-close"/>
+                        </p:column>
+                        <p:column colspan="2"></p:column>
+                    </p:row>
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <!-- NUEVO FORMULARIO IPD. ID: 5 -->
+        <p:dialog header="Nuevo formulario IPD" widgetVar="newIPD"  minimizable="true" maximizable="true" closable="false">
+            <h:form id="newIPDForm">
+                <p:panelGrid styleClass="panelGridForm">
+                    <p:row>
+                        <p:column>
+                            <br/>
+                            <p:outputLabel value="Confirma que el diagnóstico pertenece al AUGE: " for="confirmIPD"/>
+                            <p:selectBooleanCheckbox id="confirmIPD" value="#{newIPD.confirmIPD}"/>
+                            <br/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Problema salud AUGE:" for="augeProblem"/>                        
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel value="Subproblema AUGE:" for="augeSubproblem"/>                        
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:inputTextarea id="augeProblem" cols="50" rows="3" autoResize="false" value="#{NewIPD.augeProblem}"/>     
+                        </p:column>
+                        <p:column>
+                            <p:inputTextarea id="augeSubproblem" cols="50" rows="3" autoResize="false" value="#{NewIPD.augeSubproblem}"/>               
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Diagnóstico:" for="diagnosticIPD"/>                     
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel value="Fundamento Diagnóstico:" for="diagnosticfIPD"/>                     
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:inputTextarea id="diagnosticIPD" cols="50" rows="3" autoResize="false" value="#{NewIPD.diagnosticIPD}"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputTextarea id="diagnosticfIPD" cols="50" rows="3" autoResize="false" value="#{NewIPD.diagnosticfIPD}"/>     
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:outputLabel value="Tratamiento e indicaciones:" for="treatmentIPD"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:inputTextarea id="treatmentIPD" cols="109" rows="3" autoResize="false" value="#{NewIPD.treatmentIPD}"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:outputLabel value="Fecha Limite: " for="limitDateIPD"/>
+                        </p:column>                    
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:calendar id="limitDateIPD" value="#{NewIPD.limitDateIPD}"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:commandButton value="Guardar" icon="ui-icon-disk"/>
+                            <p:commandButton value="Cancelar" onclick="newIPD.hide();" actionListener="#{NewIPD.resetInput}" update="newIPDForm" icon="ui-icon-close"/>
+                        </p:column>                   
+                    </p:row>
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <!-- DATOS DEL PACIENTE. ID: 6 -->
+        <p:dialog header="Datos del paciente" widgetVar="dataPatient"  minimizable="true" maximizable="true" closable="false">
+            <h:form id="dataPatientForm" styleClass="panelGridForm">
+                <p:panelGrid columns="1">
+                    <p:panel id="personalData" header="Datos Personales" >
+                        <p:panelGrid columns="4" styleClass="panelGridForm">
+                            <p:outputLabel value="Rut: "/><p:outputLabel value="#{dataPatient.rut}"/>
+                            <p:outputLabel value="Nombres: "/><p:outputLabel value="#{dataPatient.names}"/>
+                            <p:outputLabel value="Apellido paterno: "/><p:outputLabel value="#{dataPatient.fathername}"/>
+                            <p:outputLabel value="Apellido Materno: "/><p:outputLabel value="#{dataPatient.mothername}"/>
+                            <p:outputLabel value="Nacionalidad: "/><p:outputLabel value="#{dataPatient.nationality}"/>
+                            <p:outputLabel value="Fecha de Nacimiento: "/><p:outputLabel value="#{dataPatient.birthdate}"/>
+                            <p:outputLabel value="Direccion: "/><p:outputLabel value="#{dataPatient.address}"/>
+                        </p:panelGrid>
+                    </p:panel>
+                    <p:panel id="contacData" header="Información de Contacto" >
+                        <p:panelGrid columns="4" styleClass="panelGridForm">                    
+                            <p:outputLabel value="Pasaporte: "/><p:outputLabel value="#{dataPatient.passport}"/>
+                            <p:outputLabel value="Email: "/><p:outputLabel value="#{dataPatient.email}"/>
+                            <p:outputLabel value="Teléfono: "/><p:outputLabel value="#{dataPatient.phone}"/>
+                            <p:outputLabel value="Móvil: "/><p:outputLabel value="#{dataPatient.mobile}"/>
+                            <p:outputLabel value="Fono de Contacto: "/><p:outputLabel value="#{dataPatient.contactPhone}"/>
+                        </p:panelGrid>
+
+                    </p:panel>
+                    <p:panel id="otherData" header="Otra Información" >
+                        <p:panelGrid columns="4" styleClass="panelGridForm">                    
+                            <p:outputLabel value="Ocupación: "/><p:outputLabel value="#{dataPatient.ocupation}"/>
+                            <p:outputLabel value="Actividad: "/><p:outputLabel value="#{dataPatient.activity}"/>
+                        </p:panelGrid>
+                    </p:panel>
+                    <p:panelGrid columns="1" styleClass="panelGridForm">
+                        <p:commandButton value="Cerrar" icon="ui-icon-close" onclick="dataPatient.hide()"/>
+                    </p:panelGrid>
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+        
+        <!-- VER EVOLUCIÓN CLÍNICA. ID: 7 -->
+        <p:dialog header="Detalle Evolución Clínica" widgetVar="dialogDetailClinicalEvolution"  minimizable="true" maximizable="true" closable="true">
+            <h:form id="viewClinicalEvolutionForm">
+                <h:panelGrid columns="2" styleClass="panelGridForm">
+                    <p:outputLabel value="Id:" />
+                    <p:outputLabel value="#{showClinicalEvolution.selectedMedicalHistory.mhysId}" />
+                    <p:outputLabel value="Fecha:" />
+                    <p:outputLabel value="#{showClinicalEvolution.selectedMedicalHistory.mhysDtime.date}/#{showClinicalEvolution.selectedMedicalHistory.mhysDtime.month+1}/#{showClinicalEvolution.selectedMedicalHistory.mhysDtime.year-100+2000}" />
+                </h:panelGrid>
+                <h:panelGrid styleClass="panelGridForm">
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:outputLabel value="Contenido Evolución Clínica:" />
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:inputTextarea id="clinicalEvolutionInput"  value="#{showClinicalEvolution.selectedMedicalHistory.mhistory}" cols="40" rows="6" autoResize="false" disabled="true"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:commandButton value="Cancelar" onclick="dialogDetailClinicalEvolution.hide();" icon="ui-icon-close"/>
+                        </p:column>
+                    </p:row>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+    </h:body>
+</html>
+

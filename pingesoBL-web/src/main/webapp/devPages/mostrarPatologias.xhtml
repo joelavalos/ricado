@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:dataTable id="tabla1" var="patologias" value="#{mostrarPatologias.patologias}">
+                <p:column headerText="Id">
+                    <h:outputText value="#{patologias.patologiaid}" />
+                </p:column>
+
+                <p:column headerText="Year">
+                    <h:outputText value="#{patologias.patologianombre}" />
+                </p:column>
+
+                <p:column headerText="Brand">
+                    <h:outputText value="#{patologias.patologiages}" />
+                </p:column>
+            </p:dataTable>
+            
+            <p:commandButton value="mostrar" actionListener="#{mostrarPatologias.mostrarPatologias()}" update="tabla1"/>
+            
+            <p:panelGrid columns="2">
+                <p:outputLabel value="Nombre"/>
+                <p:inputText value="#{mostrarPatologias.nombrePatologia}"/>
+                <p:commandButton value="ingresar" actionListener="#{mostrarPatologias.crearPatologia()}" update="tabla1"/>
+            </p:panelGrid>
+        </h:form>
+
+    </h:body>
+</html>
+

@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Ver signos vitales</title>
+    </h:head>
+    <h:body>
+        <h:form id="form1">
+            <p:panelGrid columns="1">
+                <p:dataTable var="vitalSignsVar" value="#{vitalSigns.searchVitalSigns}">
+                    <f:facet name="header">
+                        Lista de signos vitales
+                    </f:facet>
+
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{vitalSignsVar.nombreSvital}" />
+                    </p:column>
+                    <p:column headerText="Rango minimo">
+                        <h:outputText value="#{vitalSignsVar.rangoMin}" />
+                    </p:column>
+                    <p:column headerText="Rango maximo">
+                        <h:outputText value="#{vitalSignsVar.rangoMax}" />
+                    </p:column>
+                </p:dataTable>
+            </p:panelGrid>
+            <p:panelGrid columns="2">
+                <p:commandButton value="Agregar" oncomplete="PF('carDialog').show()" icon="ui-icon-search" title="Añedir signo vital" update=":form1:carDetail"/>
+                
+                <p:dialog header="Nuevo signo vital" widgetVar="carDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="carDetail" style="text-align:center;">
+                    <p:panelGrid  columns="2"  columnClasses="label,value">
+                        <p:outputLabel value="Nombre: "/>
+                        <p:inputText value="#{vitalSigns.vitalSignsName}"/>
+                        <p:outputLabel value="Rango minimo "/>
+                        <p:inputText value="#{vitalSigns.vitalSignsMinRange}"/>
+                        <p:outputLabel value="Rango maximo "/>
+                        <p:inputText value="#{vitalSigns.vitalSignsMaxRange}"/>
+                        
+                        <p:commandButton value="Crear" actionListener="#{vitalSigns.addVitalSigns()}" oncomplete="PF('carDialog').hide()" update="form1"/>
+                    </p:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+            </p:panelGrid> 
+
+        </h:form>
+    </h:body>
+</html>
+

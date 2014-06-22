@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form id="form1">
+
+            <p:panelGrid columns="2">
+                <p:outputPanel>
+                    <p:outputLabel value="Fecha y hora"/>
+                    <br/>
+                    <p:selectOneMenu value="#{showSamples.samplesId}" effect="drop" > 
+                        <f:selectItems id="select" value="#{viewVitalSigns.dateGroup}" var="samples" itemLabel="#{samples.dates}" itemValue="#{samples.groups}"/>  
+                    </p:selectOneMenu>
+                </p:outputPanel>
+
+                <p:outputPanel>
+                    <p:dataTable var="samplePatients" value="#{showSamples.searchSamples}">
+                        <f:facet name="header">
+                            Signos vitales
+                        </f:facet>
+                        <p:column headerText="Signo vital">
+                            <h:outputText value="#{samplePatients.idSvitales.nombreSvital}" />
+                        </p:column>
+
+                        <p:column headerText="Valor">
+                            <h:outputText value="#{samplePatients.valor}" />
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </p:panelGrid>
+
+            <p:commandButton value="Mostrar" actionListener="#{showSamples.showSamples()}" update="form1"/>
+        </h:form>
+    </h:body>
+</html>
+

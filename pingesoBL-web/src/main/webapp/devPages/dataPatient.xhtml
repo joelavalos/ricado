@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <h:outputStylesheet name="./css/default.css"/>
+        <h:outputScript name="js/fullScreen.js" />
+        <title>Datos del Paciente</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:commandButton value="Datos del Paciente" onsuccess="patientDataDialog.show();" />
+        </h:form>
+
+        <p:dialog header="Datos del Paciente" id="patientData" widgetVar="patientDataDialog" minimizable="true">
+            <h:form id="patientDataForm">
+                <p:panelGrid styleClass="panelGridForm" columns="4">
+                    <p:outputLabel value="Rut: "/>
+                    <p:inputText value="#{newConsultation.patient.persona.persRut}"/>
+                    <p:outputLabel value="Nombres: "/>
+                    <p:inputText value="#{newConsultation.patient.persona.persNombres}"/>
+                    <p:outputLabel value="Apellido Paterno: "/>
+                    <p:inputText value="#{newConsultation.patient.persona.persApepaterno}"/>
+                    <p:outputLabel value="Apellido Materno: "/>
+                    <p:inputText value="#{newConsultation.patient.persona.persApematerno}"/>
+                    <p:outputLabel value="Fecha de Nacimiento: "/>
+                    <p:inputText value="#{newConsultation.patient.persona.persFnacimiento}"/>
+                    <p:outputLabel value="Nacionalidad: "/>
+                    <p:inputText value="#{newConsultation.patient.persona.persNacionalidad}"/>
+                    <p:outputLabel value="Pasaporte: "/>
+                    <p:inputText value="#{newConsultation.patient.persona.persPasaporte}"/>
+                    <p:outputLabel value="Email: "/>
+                    <p:inputText value="#{newConsultation.patient.persona.persEmail}"/>
+                    <p:outputLabel value="Teléfono: "/>
+                    <p:inputText value="#{newConsultation.patient.persona.persTelefono}"/>
+                    <p:outputLabel value="Celular: "/>
+                    <p:inputText value="#{newConsultation.patient.persona.persCelular}"/>
+                    <p:outputLabel value="Teléfono de Contacto: "/>
+                    <p:inputText value="#{newConsultation.patient.persona.persTelcontacto}"/>
+                    <p:outputLabel value="Dirección: "/>
+                    <p:inputText value="#{newConsultation.patient.persona.persDireccion}"/>
+                    <p:outputLabel value="Ocupación: "/>
+                    <p:inputText value="#{newConsultation.patient.persona.persOcupacion}"/>
+                    <p:outputLabel value="Actividad: "/>
+                    <p:inputText value="#{newConsultation.patient.persona.persActividad}"/>
+                </p:panelGrid>
+                <p:panelGrid styleClass="panelGridForm">
+                    <p:row>
+                        <p:column>
+                            <p:commandButton onclick="patientDataDialog.hide()" icon="ui-icon-cancel" value="Cancelar"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+
+    </h:body>
+</html>

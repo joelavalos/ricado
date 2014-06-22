@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form id="form1">
+            <p:dataTable var="consultations" value="#{showPatientConsultation.searchConsultas}">
+                <p:column headerText="Id consulta">
+                    <h:outputText value="#{consultations.consultaid}" />
+                </p:column>
+                <p:column headerText="Id episodio">
+                    <h:outputText value="#{consultations.episodioid.episodioid}" />
+                </p:column>
+                <p:column headerText="Hdiagnostica">
+                    <h:outputText value="#{consultations.hdiagnostica}" />
+                </p:column>
+                <p:column headerText="Fecha">
+                    <h:outputText value="#{consultations.consultafecha}" />
+                </p:column>
+                <p:column headerText="Cancelada">
+                    <h:outputText value="#{consultations.cancelada}" />
+                </p:column>
+                <p:column headerText="Motivo cancelada">
+                    <h:outputText value="#{consultations.motivocancel}" />
+                </p:column>
+                <p:column headerText="Motivo consulta">
+                    <h:outputText value="#{consultations.motivoConsulta}" />
+                </p:column>
+                <p:column headerText="Exploracion fisica">
+                    <h:outputText value="#{consultations.exploracionFisica}" />
+                </p:column>
+                <p:column headerText="Notas">
+                    <h:outputText value="#{consultations.notas}" />
+                </p:column>
+            </p:dataTable>
+            <p:commandButton value="Mostrar consultas" actionListener="#{showPatientConsultation.showConsultation()}" update="form1"/>
+
+            <p:panelGrid columns="2">
+                <p:outputLabel value="Hdiagnostica: "/>
+                <p:inputText value="#{showPatientConsultation.hdiagnostica}"/>
+                <p:outputLabel value="Razon cancelada "/>
+                <p:inputText value="#{showPatientConsultation.cancelReason}"/>
+                <p:outputLabel value="Razon consulta "/>
+                <p:inputText value="#{showPatientConsultation.consultationReason}"/>
+                <p:outputLabel value="Notas "/>
+                <p:inputText value="#{showPatientConsultation.notes}"/>
+                <p:outputLabel value="Evaluacion fisica "/>
+                <p:inputText value="#{showPatientConsultation.physicalExamination}"/>
+                <p:commandButton  value="Crear" actionListener="#{showPatientConsultation.createConsultation()}" update="form1"/>
+            </p:panelGrid>
+            <p:panelGrid columns="2">
+                <p:outputLabel value="Enfermedad: "/>
+                <p:selectOneMenu value="#{showPatientConsultation.pathologyId}" effect="drop" > 
+                    <f:selectItems id="selecPathology" value="#{showPatientConsultation.searchPathology}" var="pathology" itemLabel="#{pathology.patologianombre}" itemValue="#{pathology.patologiaid}"/>  
+                </p:selectOneMenu>
+            </p:panelGrid>
+
+            <p:dataTable var="diagnoses" value="#{showPatientConsultation.allDiagnosesConsultation}">
+                <p:column headerText="Id de la consulta">
+                    <h:outputText value="#{diagnoses.consultaid.consultaid}" />
+                </p:column>
+                <p:column headerText="Id diagnostico">
+                    <h:outputText value="#{diagnoses.diagnosticoid}" />
+                </p:column>
+                <p:column headerText="Nombre patologia">
+                    <h:outputText value="#{diagnoses.patologiaid.patologianombre}" />
+                </p:column>
+                <p:column headerText="GES">
+                    <h:outputText value="#{diagnoses.diagnosticoges}" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </h:body>
+</html>
+

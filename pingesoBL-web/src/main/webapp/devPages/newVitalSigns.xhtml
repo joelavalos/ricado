@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <h:outputStylesheet name="./css/default.css"/>
+        <h:outputScript name="js/fullScreen.js" />
+        <title>Episodios</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:commandButton value="Nuevo Signo Vital" onclick="PF('newVitalSignsDialog').show();" />
+        </h:form>
+
+        <p:dialog header="Nuevos Signos Vitales" id="newVitalSigns" widgetVar="newVitalSignsDialog" minimizable="true">
+            <h:form id="newVitalSignsForm">
+                <p:panelGrid styleClass="panelGridForm" columns="4">
+                    <p:outputLabel value="Peso: "/>
+                    <p:inputText value="#{addVitalSigns.peso}"/>
+                    <p:outputLabel value="Altura: "/>
+                    <p:inputText value="#{addVitalSigns.altura}"/>
+                    <p:outputLabel value="Temperatura: "/>
+                    <p:inputText value="#{addVitalSigns.temperatura}"/>
+                    <p:outputLabel value="Saturación O2: "/>
+                    <p:inputText value="#{addVitalSigns.saturacion}"/>
+                    <p:outputLabel value="Presión Sistólica: "/>
+                    <p:inputText value="#{addVitalSigns.presionSistolica}"/>
+                    <p:outputLabel value="Presión Diastólica: "/>
+                    <p:inputText value="#{addVitalSigns.presionDiastolica}"/>
+                </p:panelGrid>
+                <p:separator/>
+                <p:panelGrid columns="4" styleClass="panelGridForm" >
+                    <p:outputLabel value="Nombre signo vital: "/>
+                    <p:selectOneMenu value="#{addVitalSigns.vitalSignsId}"> 
+                        <f:selectItem itemLabel="Seleccione" itemValue="0"/>  
+                        <f:selectItems id="resGrp" value="#{addVitalSigns.searchVitalSigns}" var="grp" itemLabel="#{grp.nombreSvital}" itemValue="#{grp.idSvitales}"/>  
+                    </p:selectOneMenu>
+                    <p:inputText value="#{addVitalSigns.vitalSignsValue}"/>
+
+                    <p:commandButton icon="ui-icon-plus" value="Añadir" actionListener="#{addVitalSigns.addVitalSignsPatients()}" update="newVitalSignsForm"/>
+                </p:panelGrid>
+                <p:panelGrid styleClass="panelGridForm" columns="1">
+                    <p:dataTable id="tableVitalSigns" var="vSigns" value="#{addVitalSigns.createSamples}" 
+                                 emptyMessage="No se han ingresado otros signos vitales." scrollable="true" scrollHeight="50"
+                                 style="width:600px ">
+                        <f:facet name="header">
+                            Otros signos vitales
+                        </f:facet>
+                        <p:column headerText="Nombre">
+                            <h:outputText value="#{vSigns.idSvitales.nombreSvital}" />
+                        </p:column>
+                        <p:column headerText="Valor">
+                            <h:outputText value="#{vSigns.valor}" />
+                        </p:column>
+                    </p:dataTable>
+                </p:panelGrid>
+                <p:panelGrid styleClass="panelGridForm">
+                    <p:row>
+                        <p:column>
+                            <p:commandButton icon="ui-icon-disk" value="Terminar" actionListener="#{addVitalSigns.createVitalSignsPatients}" update="newVitalSignsForm"/>
+                            <p:commandButton icon="ui-icon-cancel" value="Cancelar" onsuccess="newVitalSignsDialog.hide()"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+
+    </h:body>
+</html>

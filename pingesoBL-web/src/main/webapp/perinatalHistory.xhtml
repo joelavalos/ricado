@@ -1,0 +1,368 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <h:outputStylesheet name="./css/default.css"/>
+        <h:outputScript name="js/fullScreen.js" />
+        <title>Finalizar consulta</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:commandButton value="Datos perinatales" onclick="PF('dialogPerinatalHistory').show();" type="button" />
+        </h:form>
+
+        <p:dialog header="Antecedentes Perinatales" id="perinatalHistory" widgetVar="dialogPerinatalHistory" minimizable="true">
+            <h:form id="perinatalHistoryForm">
+                <p:tabView>
+                    <p:tab title="Antecedentes">  
+                        <p:panelGrid styleClass="panelGridForm">
+                            <p:row>
+                                <p:column>
+                                    <p:panelGrid columns="1" styleClass="panelGridForm">
+                                        <p:outputLabel value="FAMILIARES"/>
+                                        <p:selectManyCheckbox id="familyHistory" value="#{perinatalHistory.familyHistory}"  layout="grid" columns="1">
+                                            <f:selectItem itemLabel="Diabetes" itemValue="fDiabetes" />
+                                            <f:selectItem itemLabel="TBC Pulmonar" itemValue="fTBC Pulmonar" />
+                                            <f:selectItem itemLabel="Hipertensión" itemValue="fHipertensión" />
+                                            <f:selectItem itemLabel="Gemelares" itemValue="fGemelares" />
+                                            <f:selectItem itemLabel="Otros" itemValue="fOtros" />
+                                        </p:selectManyCheckbox>
+                                    </p:panelGrid>
+                                </p:column>
+                                <p:column>
+                                    <p:panelGrid columns="1" styleClass="panelGridForm">
+                                        <p:outputLabel value="PERSONALES"/>
+                                        <p:selectManyCheckbox id="personalHistory" value="#{perinatalHistory.personalHistory}" layout="grid" columns="1" >
+                                            <f:selectItem itemLabel="Diabetes" itemValue="pDiabetes" />
+                                            <f:selectItem itemLabel="TBC Pulmonar" itemValue="pTBC Pulmonar" />
+                                            <f:selectItem itemLabel="Hipertensión" itemValue="pHipertensión" />
+                                            <f:selectItem itemLabel="CIE" itemValue="pCIE" />
+                                            <f:selectItem itemLabel="Otros" itemValue="pOtros" />
+                                        </p:selectManyCheckbox>
+                                    </p:panelGrid>
+                                </p:column>
+                                <p:column>
+                                    <p:panelGrid columns="2" styleClass="panelGridForm">                                       
+                                        <h:outputLabel for="abortions" value="Abortos" />
+                                        <p:spinner id="abortions" value="#{perinatalHistory.abortions}" min="0" max="99"  size="1" />
+                                    </p:panelGrid>
+                                    <p:selectOneRadio id="basic" value="#{perinatalHistory.reasonAbortion}" layout="grid" columns="1">
+                                        <f:selectItem itemLabel="Provocados" itemValue="Provocados"/>
+                                        <f:selectItem itemLabel="Espontaneos" itemValue="Espontaneos"/>
+                                        <f:selectItem itemLabel="Sépticos" itemValue="Sépticos"/>
+                                        <f:selectItem itemLabel="Molar" itemValue="Molar"/>
+                                        <f:selectItem itemLabel="Eptópico" itemValue="Eptópico"/>
+                                    </p:selectOneRadio>
+                                </p:column>
+                                <p:column>
+                                    <p:panelGrid columns="2" styleClass="panelGridForm">                                       
+                                        <h:outputLabel for="deeds" value="Gestas:" />
+                                        <p:spinner id="deeds" value="#{perinatalHistory.deeds}" min="0" max="99"  size="1" />
+                                        <h:outputLabel for="births" value="Partos:" />
+                                        <p:spinner id="births" value="#{perinatalHistory.births}" min="0" max="99"  size="1" />
+                                    </p:panelGrid>
+                                    <p:selectManyCheckbox id="bornCheck" value="#{perinatalHistory.bornCheck}"  layout="grid" columns="1">
+                                        <f:selectItem itemLabel="Ninguno o más de 3 partos " itemValue="Ninguno o más de 3 partos" />
+                                        <f:selectItem itemLabel="Algún RN menor de 2500 gr" itemValue="Algún RN menor de 2500 gr" />
+                                        <f:selectItem itemLabel="Gemelar" itemValue="Gemelar" />
+                                    </p:selectManyCheckbox>
+                                </p:column>
+                            </p:row>                            
+                        </p:panelGrid>
+                        <p:panelGrid styleClass="panelGridForm">
+                            <p:row>
+                                <p:column>
+                                    <p:panelGrid columns="2" styleClass="panelGridForm">         
+                                        <h:outputLabel for="born" value="Nacidos vivos: " />
+                                        <p:spinner id="born" value="#{perinatalHistory.born}" min="0" max="99"  size="1" />
+
+                                        <h:outputLabel for="stillbirths" value="Nacidos Muertos: " />
+                                        <p:spinner id="stillbirths" value="#{perinatalHistory.stillbirths}" min="0" max="99"  size="1" />
+
+                                        <h:outputLabel for="living" value="Vivos: " />
+                                        <p:spinner id="living" value="#{perinatalHistory.living}" min="0" max="99"  size="1" />
+
+                                        <h:outputLabel for="deadFirstWeek" value="Muertos 1° semana: " />
+                                        <p:spinner id="deadFirstWeek" value="#{perinatalHistory.deadFirstWeek}" min="0" max="99"  size="1" />
+                                    </p:panelGrid>
+                                </p:column>
+                                <p:column>
+                                    <p:panelGrid columns="2" styleClass="panelGridForm">         
+                                        <h:outputLabel for="deadSecondWeek" value="Muertos 2° a 4° semana: " />
+                                        <p:spinner id="deadSecondWeek" value="#{perinatalHistory.deadSecondWeek}" min="0" max="99"  size="1" />
+
+                                        <p:outputLabel for="lastPregnancy" value="Término último embarazo:" />
+                                        <p:calendar id="lastPregnancy" value="#{perinatalHistory.lastPregnancy}" />
+
+                                        <h:outputLabel for="deadSecondWeek" value="RN con mayor peso:" />
+                                        <p:spinner id="RNHeavier" value="#{perinatalHistory.RNHeavier}" min="0" max="99"  size="1" />
+                                    </p:panelGrid>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+
+
+                    </p:tab>
+                    <p:tab title="Embarazo Actual">
+
+                        <p:panelGrid  >
+                            <p:row>
+                                <p:column>
+                                    <p:panelGrid columns="3" styleClass="panelGridForm">
+                                        <h:outputLabel for="usualWeight" value="Peso habitual:" />
+                                        <p:spinner id="usualWeight" value="#{perinatalHistory.usualWeight}" min="0" max="300"  size="1" />
+                                        <h:outputLabel for="usualWeight" value="kg" />
+
+                                        <h:outputLabel for="currentWeight" value="Peso Actual:" />
+                                        <p:spinner id="currentWeight" value="#{perinatalHistory.currentWeight}" min="0" max="300"  size="1" />
+                                        <h:outputLabel for="currentWeight" value="kg" />
+
+                                        <h:outputLabel for="size" value="Talla:" />
+                                        <p:spinner id="size" value="#{perinatalHistory.size}" min="0" max="999"  size="1" />
+                                        <h:outputLabel for="size" value="cm" />
+                                    </p:panelGrid>
+                                </p:column>
+                                <p:column>
+                                    <p:panelGrid columns="2" styleClass="panelGridForm">
+                                        <h:outputLabel for="FUR" value="F.U.R:" />
+                                        <p:calendar id="FUR" value="#{perinatalHistory.FUR}" />
+                                        <h:outputLabel for="FURO" value="F.U.R Operacional:" />
+                                        <p:calendar id="FURO" value="#{perinatalHistory.FURO}" />
+                                        <p:outputLabel for="doubts" value="Dudas:" />
+                                        <p:selectOneRadio id="doubts" value="#{perinatalHistory.doubts}">
+                                            <f:selectItem itemLabel="Sí" itemValue="Sí" />
+                                            <f:selectItem itemLabel="No" itemValue="No" />
+                                        </p:selectOneRadio> 
+                                    </p:panelGrid>
+                                </p:column>
+                                <p:column>
+                                    <p:selectManyCheckbox id="estimated" value="#{perinatalHistory.estimated}" layout="grid" columns="1" >
+                                        <f:selectItem itemLabel="Eco precoz" itemValue="Eco precoz" />
+                                        <f:selectItem itemLabel="Paciente" itemValue="Paciente" />
+                                        <f:selectItem itemLabel="Hipertensión" itemValue="Hipertensión" />
+                                        <f:selectItem itemLabel="Clínica" itemValue="Clínica" />
+                                    </p:selectManyCheckbox>                              
+                                </p:column>   
+                                <p:column>
+                                    <p:panelGrid styleClass="panelGridForm">
+                                        <p:row>
+                                            <p:column>
+                                                <h:outputLabel for="FPBirth" value="F.P. Parto:" />
+                                            </p:column>
+                                            <p:column>
+                                                <p:calendar id="FPBirth" value="#{perinatalHistory.FPBirth}" />
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <h:outputLabel for="gestationalAge" value="Edad Gestación ingreso: " />
+                                            </p:column>
+                                            <p:column>
+                                                <p:spinner id="gestationalAge" value="#{perinatalHistory.gestationalAge}" min="0" max="99"  size="1" />
+                                                <h:outputLabel for="gestationalAge" value=" Semanas" />  
+                                            </p:column>                                            
+                                        </p:row>
+                                    </p:panelGrid>
+                                </p:column>
+                            </p:row>                            
+                        </p:panelGrid>
+                        <p:panelGrid>
+                            <p:row>
+                                <p:column>
+                                    <p:panelGrid styleClass="panelGridForm">
+                                        <p:row>
+                                            <p:column colspan="2">
+                                                <h:outputLabel value="Hospitalización Embarazo actual" />
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <h:outputLabel for="numberDays" value="N° de Dias" />
+                                            </p:column>
+                                            <p:column>
+                                                <p:spinner id="numberDays" value="#{perinatalHistory.numberDays}" min="0" max="99"  size="1" />
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column colspan="2">
+                                                <p:selectOneRadio id="doubtsHEA" value="#{perinatalHistory.doubtsHEA}">
+                                                    <f:selectItem itemLabel="Sí" itemValue="Sí" />
+                                                    <f:selectItem itemLabel="No" itemValue="No" />
+                                                </p:selectOneRadio> 
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <h:outputLabel value="Motivo" />
+                                            </p:column>
+                                            <p:column>
+                                                <p:inputText value="#{perinatalHistory.reason}" />
+                                            </p:column>
+                                        </p:row>
+                                    </p:panelGrid>
+                                </p:column>
+                                <p:column>
+                                    <p:panelGrid styleClass="panelGridForm">
+                                        <p:row>
+                                            <p:column colspan="2">
+                                                <h:outputLabel value="Grupo de Sangre" />
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <p:inputText value="#{perinatalHistory.blood}" />
+
+                                            </p:column>
+                                            <p:column>
+                                                <h:outputLabel value="Rh" />
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column colspan="2">
+                                                <p:selectOneRadio id="bloodType" value="#{perinatalHistory.bloodType}">
+                                                    <f:selectItem itemLabel="Positivo" itemValue="Positivo" />
+                                                    <f:selectItem itemLabel="Negativo" itemValue="Negativo" />
+                                                </p:selectOneRadio> 
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column colspan="2">
+                                                <h:outputLabel value="Sensibilizada" />
+                                            </p:column>                                            
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <p:selectOneRadio id="sensitized" value="#{perinatalHistory.sensitized}">
+                                                    <f:selectItem itemLabel="Sí" itemValue="Sí" />
+                                                    <f:selectItem itemLabel="No" itemValue="No" />
+                                                </p:selectOneRadio> 
+                                            </p:column>
+                                        </p:row>
+                                    </p:panelGrid>
+                                </p:column>
+                                <p:column>
+                                    <p:panelGrid styleClass="panelGridForm" >
+                                        <p:row>
+                                            <p:column>
+                                                <h:outputLabel value="Ex. clínico normal" />                                    
+                                            </p:column>
+                                            <p:column>
+                                                <h:outputLabel value="Ex. mamas normal" />                                    
+                                            </p:column> 
+                                            <p:column>
+                                                <h:outputLabel value="Papanic. normal" />                                    
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <p:selectOneRadio id="examinationCN" value="#{perinatalHistory.examinationCN}">
+                                                    <f:selectItem itemLabel="Sí" itemValue="Sí" />
+                                                    <f:selectItem itemLabel="No" itemValue="No" />
+                                                </p:selectOneRadio>                                     
+                                            </p:column>
+                                            <p:column>
+                                                <p:selectOneRadio id="examinationMN" value="#{perinatalHistory.examinationMN}">
+                                                    <f:selectItem itemLabel="Sí" itemValue="Sí" />
+                                                    <f:selectItem itemLabel="No" itemValue="No" />
+                                                </p:selectOneRadio>                                    
+                                            </p:column>       
+                                            <p:column>
+                                                <p:selectOneRadio id="normalPapanic" value="#{perinatalHistory.normalPapanic}">
+                                                    <f:selectItem itemLabel="Sí" itemValue="Sí" />
+                                                    <f:selectItem itemLabel="No" itemValue="No" />
+                                                </p:selectOneRadio>                                    
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <h:outputLabel value="Ex. odont. normal" />                                    
+                                            </p:column>
+                                            <p:column>
+                                                <h:outputLabel value="Pelvis normal" />                                    
+                                            </p:column>
+                                            <p:column>
+                                                <h:outputLabel value="Cervix normal" />                                    
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <p:selectOneRadio id="examinationON" value="#{perinatalHistory.examinationON}">
+                                                    <f:selectItem itemLabel="Sí" itemValue="Sí" />
+                                                    <f:selectItem itemLabel="No" itemValue="No" />
+                                                </p:selectOneRadio>                                   
+                                            </p:column>
+                                            <p:column>
+                                                <p:selectOneRadio id="normalPelvis" value="#{perinatalHistory.normalPelvis}">
+                                                    <f:selectItem itemLabel="Sí" itemValue="Sí" />
+                                                    <f:selectItem itemLabel="No" itemValue="No" />
+                                                </p:selectOneRadio> 
+                                            </p:column>
+                                            <p:column>
+                                                <p:selectOneRadio id="normalCervix" value="#{perinatalHistory.normalCervix}">
+                                                    <f:selectItem itemLabel="Sí" itemValue="Sí" />
+                                                    <f:selectItem itemLabel="No" itemValue="No" />
+                                                </p:selectOneRadio>                                     
+                                            </p:column>
+                                        </p:row>
+                                    </p:panelGrid>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                        <p:panelGrid>
+                            <p:row>
+                                <p:column>
+                                    <p:panelGrid columns="1" styleClass="panelGridForm">
+                                        <h:outputLabel value="VIH" />
+                                        <p:selectOneRadio id="VIH" value="#{perinatalHistory.VIH}">
+                                            <f:selectItem itemLabel="+" itemValue="+" />
+                                            <f:selectItem itemLabel="-" itemValue="-" />
+                                        </p:selectOneRadio> 
+                                    </p:panelGrid>
+                                </p:column>
+                                <p:column>
+                                    <p:panelGrid columns="1" styleClass="panelGridForm">
+                                        <p:outputLabel value="VLDR"/>  
+                                        <p:selectOneRadio id="VDRLOption" value="#{perinatalHistory.VDRLOption}">
+                                            <f:selectItem itemLabel="+" itemValue="+" />
+                                            <f:selectItem itemLabel="-" itemValue="-" />
+                                        </p:selectOneRadio>  
+                                        <p:calendar id="VDRL" value="#{perinatalHistory.VDRL}" />
+                                    </p:panelGrid>
+                                </p:column>
+                                <p:column>
+                                    <p:panelGrid columns="1" styleClass="panelGridForm">
+                                        <p:selectManyCheckbox id="HCTOCheck" value="#{perinatalHistory.HCTOCheck}" layout="grid" columns="1" >
+                                            <f:selectItem itemLabel="HCTO." itemValue="HCTO" /> 
+                                        </p:selectManyCheckbox>
+                                        <p:spinner id="HTCTOFloat" value="#{perinatalHistory.HTCTOFloat}" stepFactor="0.1" size="1" />
+                                        <p:calendar id="HCTODate" value="#{perinatalHistory.HCTODate}" />   
+                                    </p:panelGrid>
+                                </p:column>
+                                <p:column>
+                                    <p:panelGrid columns="1" styleClass="panelGridForm">
+                                        <p:outputLabel value="Fuma:"/>
+                                        <p:selectOneRadio id="smoker" value="#{perinatalHistory.smoker}">
+                                            <f:selectItem itemLabel="Sí" itemValue="Sí" />
+                                            <f:selectItem itemLabel="No" itemValue="No" />
+                                        </p:selectOneRadio> 
+                                        <p:outputLabel value="Cigarros por día:"/>
+                                        <p:spinner id="cantCigars" value="#{perinatalHistory.cantCigars}" min="0" max="100"  size="1" />
+                                    </p:panelGrid>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:tab>                
+                </p:tabView>
+                <p:panelGrid columns="2" styleClass="panelGridForm">                    
+                    <p:commandButton value="Guardar" icon="ui-icon-disk" actionListener="#{perinatalHistory.save}"/>
+                    <p:commandButton value="Cancelar" icon="ui-icon-cancel" />
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+
+
+    </h:body>
+</html>

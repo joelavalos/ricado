@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form id="form1">
+            <p:panelGrid columns="2" >
+                <p:outputLabel value="peso: "/>
+                <p:inputText value="#{vitalSigns.peso}"/>
+                <p:outputLabel value="altura: "/>
+                <p:inputText value="#{vitalSigns.altura}"/>
+                <p:outputLabel value="temperatura: "/>
+                <p:inputText value="#{vitalSigns.temperatura}"/>
+                <p:outputLabel value="Saturación O2: "/>
+                <p:inputText value="#{vitalSigns.saturación}"/>
+                <p:outputLabel value="Presión Sistólica: "/>
+                <p:inputText value="#{vitalSigns.presiónSistólica}"/>
+                <p:outputLabel value="Presión Diastólica: "/>
+                <p:inputText value="#{vitalSigns.presiónDiastólica}"/>
+
+                <p:dataTable id="tableVitalSigns" var="signosVitales" value="#{vitalSigns.createSamples}">
+                    <f:facet name="header">
+                        Signos vitales adicionales
+                    </f:facet>
+
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{signosVitales.idSvitales.nombreSvital}" />
+                    </p:column>
+
+                    <p:column headerText="Valor">
+                        <h:outputText value="#{signosVitales.valor}" />
+                    </p:column>
+                </p:dataTable>
+            </p:panelGrid>
+
+            <p:panelGrid columns="2">
+                <p:outputLabel value="Nombre signo vital: "/>
+                <p:selectOneMenu value="#{vitalSigns.vitalSignsId}" effect="drop" > 
+                    <f:selectItems id="resGrp" value="#{vitalSigns.searchVitalSigns}" var="grp" itemLabel="#{grp.nombreSvital}" itemValue="#{grp.idSvitales}"/>  
+                </p:selectOneMenu>
+                <p:outputLabel value="Valor: "/>
+                <p:inputText value="#{vitalSigns.vitalSignsValor}"/>
+                <p:commandButton value="Terminar" actionListener="#{vitalSigns.createVitalSignsPatients()}" update="form1"/>
+                <p:commandButton value="Añadir" actionListener="#{vitalSigns.addVitalSignsPatients()}" update="tableVitalSigns"/>
+            </p:panelGrid>
+        </h:form>
+    </h:body>
+</html>
+

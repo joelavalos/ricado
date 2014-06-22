@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <h:outputStylesheet name="./css/default.css"/>
+        <title>Datos del paciente</title>
+    </h:head>
+    <h:body>
+        <h:form id="form1">
+            <p:panelGrid styleClass="panelGridForm">
+                <p:row>
+                    <p:column>
+                        <br/>
+                        <p:outputLabel value="Confirma que el diagnóstico pertenece al AUGE: " for="confirmIPD"/>
+                        <p:selectBooleanCheckbox id="confirmIPD" value="#{createIPDGES.confirmsGES}"/>
+                        <br/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Problema salud AUGE:" for="augeProblem"/>                        
+                    </p:column>
+                    <p:column>
+                        <p:outputLabel value="Subproblema AUGE:" for="augeSubproblem"/>                        
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:inputTextarea id="augeProblem" value="#{createIPDGES.augeProblem}" cols="50" rows="3" autoResize="false"/>     
+                    </p:column>
+                    <p:column>
+                        <p:inputTextarea id="augeSubproblem" value="#{createIPDGES.augeSubProblem}" cols="50" rows="3" autoResize="false"/>               
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:outputLabel value="Diagnóstico:" for="diagnosticIPD"/>                     
+                    </p:column>
+                    <p:column>
+                        <p:outputLabel value="Fundamento Diagnóstico:" for="diagnosticfIPD"/>                     
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:inputTextarea id="diagnosticIPD" value="#{createIPDGES.diagnosis}" cols="50" rows="3" autoResize="false"/>
+                    </p:column>
+                    <p:column>
+                        <p:inputTextarea id="diagnosticfIPD" value="#{createIPDGES.fundamentDiagnosis}" cols="50" rows="3" autoResize="false"/>     
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column colspan="2">
+                        <p:outputLabel value="Tratamiento e indicaciones:" for="treatmentIPD"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column colspan="2">
+                        <p:inputTextarea id="treatmentIPD" value="#{createIPDGES.treatment}" cols="109" rows="3" autoResize="false"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column colspan="2">
+                        <p:outputLabel value="Fecha Limite: " for="limitDateIPD"/>
+                    </p:column>                    
+                </p:row>
+                <p:row>
+                    <p:column colspan="2">
+                        <p:calendar id="limitDateIPD" value="#{createIPDGES.deadline}"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column colspan="2">
+                        <p:commandButton value="Guardar" icon="ui-icon-disk" actionListener="#{createIPDGES.createIPDGES()}" update="form1" />
+                         <p:commandButton value="Cancelar" icon="ui-icon-close"/>
+                    </p:column>                   
+                </p:row>
+            </p:panelGrid>
+        </h:form>
+    </h:body>
+</html>

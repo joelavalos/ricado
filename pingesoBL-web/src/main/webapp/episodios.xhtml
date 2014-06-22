@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="index.xhtml">
+        <ui:define name="episodios">
+                <p:ajax event="close" listener="#{episodes.resetEpisodes()}" update=":episodesForm"/>
+                <p:growl id="episodesValidator"/>
+
+                <h:form id="episodesForm">
+                    <p:panelGrid styleClass="panelGridForm" columns="2">
+                        <p:outputLabel value="RUT:"/>
+                        <p:outputLabel value="#{episodes.rut}" id="rutPatientDE" style="font-weight: bold;"/>
+                        <p:outputLabel value="Nombre del Paciente:"/>
+                        <p:outputLabel value="#{episodes.name}" id="namePatientDE" style="font-weight: bold;"/>
+                        <p:outputLabel for="IDEpisodeDE" value="Episodio:" />
+                        <p:selectOneMenu id="IDEpisodeDE" value="#{episodes.episode}" validator="#{validator.selectOneEpisode}">
+                            <f:selectItems value="#{episodes.episodes}" />                        
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:panelGrid styleClass="panelGridForm">
+                        <p:row>
+                            <p:column>
+                                <p:commandButton value="Episodio" icon="ui-icon-plusthick" disabled="true"/>
+                                <p:commandButton value="Ver Consultas" icon="ui-icon-search" actionListener="#{viewEpisodes.loadConsultations(episodes.episode)}" update=":viewEpisodesForm :episodesValidator" validateClient="true"/>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

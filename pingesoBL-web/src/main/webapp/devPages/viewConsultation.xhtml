@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <h:head>
+        <h:outputStylesheet name="./css/default.css"/>
+        <title>Resumen Consulta</title>
+    </h:head>
+    <h:body>
+        <p:panelGrid styleClass="panelGridForm">
+            <p:row>
+                <p:column>
+                    <p:panelGrid columns="4" style="font-weight: bold">
+                        <p:outputLabel value="Rut paciente:"/>
+                        <p:outputLabel value="-"/>
+                        <p:outputLabel value="Nombre paciente:"/>
+                        <p:outputLabel value="-"/>
+                    </p:panelGrid>
+                </p:column>
+            </p:row>
+            <p:row>
+                <p:column colspan="2">  
+                </p:column>
+            </p:row>
+        </p:panelGrid>       
+            <p:panelGrid styleClass="panelGridForm">
+                <p:row>
+                    <p:column>
+                        <p:dataTable id="diagnosticDataTable" value="#{newConsultation.diagPathList}" var="diagPath" emptyMessage="El paciente no registra diagnósticos en esta consulta"
+                                     scrollable="true" scrollHeight="65" scrollWidth="657" style="width: 657px;">
+                            <f:facet name="header">
+                                <h:outputText value="Diagnósticos Ingresados" />
+                            </f:facet>
+                            <p:column headerText="CIE 10" sortBy="#{diagPath.pathologyId}" width="100">
+                                <h:outputText value="#{diagPath.pathologyId}" />
+                            </p:column>
+                            <p:column headerText="Patología" sortBy="#{diagPath.pathologyName}">
+                                <h:outputText value="#{diagPath.pathologyName}" />
+                            </p:column>
+                            <p:column headerText="Estado" sortBy="#{diagPath.diagnosticState}">
+                                <h:outputText value="#{diagPath.diagnosticState}" />
+                            </p:column>
+                            <p:column headerText="Ges" sortBy="#{diagPath.diagnosticGes ? 'SI': 'NO'}">
+                                <h:outputText value="#{diagPath.diagnosticGes ? 'SI': 'NO'}" />
+                            </p:column>
+                            <f:facet name="footer" >
+                                <!--aqui-->
+                                <p:outputLabel value=" "/>
+                            </f:facet>
+                        </p:dataTable>
+                    </p:column>
+                    <p:column>
+                        <p:panelGrid styleClass="panelGridForm" columns="1">
+                            <f:facet name="header">
+                                Hipótesis Diagnóstica
+                            </f:facet>
+                            <p:scrollPanel mode="native" style="width:377px;height:122px"/>                            
+                        </p:panelGrid>                    
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column/>                   
+                </p:row>
+            </p:panelGrid>            
+            <p:panelGrid styleClass="panelGridForm">
+                <p:row>                    
+                    <p:column>
+                        <p:tabView>
+                            <p:tab title="Motivos de la Consulta">
+                                <h:panelGrid columns="2" cellpadding="10">
+                                    <p:scrollPanel mode="native" style="width:438px;height:80px"/>
+                                </h:panelGrid>
+                            </p:tab>
+                            <p:tab title="Notas">
+                                <h:panelGrid columns="2" cellpadding="10">
+                                    <p:scrollPanel mode="native" style="width:438px;height:80px"/>
+                                </h:panelGrid>
+                            </p:tab>
+                            <p:tab title="Exploración Física">
+                                <h:panelGrid columns="2" cellpadding="10">
+                                    <p:scrollPanel mode="native" style="width:438px;height:80px"/>
+                                </h:panelGrid>
+                            </p:tab>
+                            <p:tab title="Tratamiento" disabled="true">
+                                <h:panelGrid columns="1" cellpadding="10">
+                                    <p:scrollPanel mode="native" style="width:438px;height:80px"/>
+                                </h:panelGrid>
+                            </p:tab>
+                        </p:tabView>
+                    </p:column>
+                    <p:column>
+                        <p:panelGrid styleClass="panelGridForm" columns="2">
+                            <p:selectBooleanCheckbox value="#{newConsultation.pertinence}"/>
+                            <h:outputText value=" Pertinencia" style="font-weight: bold;"/>                           
+                        </p:panelGrid>
+                        <p:panelGrid styleClass="panelGridForm" columns="1">
+                            <p:commandButton value="Signos Vitales a la Fecha" icon="ui-icon-calendar"/>                         
+                        </p:panelGrid>                         
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+            <p:panelGrid styleClass="panelGridForm">
+                <p:row>
+                    <p:column colspan="2">
+                        <p:commandButton value="Cancelar" icon="ui-icon-cancel" />
+                    </p:column>
+                </p:row>
+            </p:panelGrid>    
+
+    </h:body>
+</html>
+

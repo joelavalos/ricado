@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <h:outputStylesheet name="./css/default.css"/>
+        <h:outputScript name="js/fullScreen.js" />
+        <title>Finalizar consulta</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:commandButton value="Show Dialog" onclick="PF('dialogEndConsultation').show();" type="button" />
+        </h:form>
+
+        <p:dialog header="Finalizar Consulta" id="endConsultation" widgetVar="dialogEndConsultation" minimizable="true">
+            <h:form id="endConsultationForm">
+                <p:outputPanel id="customPanel" style="margin-bottom:5px">
+                    <p:outputLabel value="Seleccione un estado de la consulta actual:" />
+                    <p:selectOneRadio id="customRadio" layout="custom">
+                        <f:selectItem itemLabel="Atendido" itemValue="Atendido" />
+                        <f:selectItem itemLabel="No se presentó" itemValue="No se presentó" />
+                        <f:selectItem itemLabel="Cancelado" itemValue="Cancelado" />
+                        <f:selectItem itemLabel="No atendido" itemValue="No atendido" />
+                        <f:selectItem itemLabel="Alta" itemValue="Alta" />
+                        <f:selectItem itemLabel="Hospitalización" itemValue="Hospitalización" />
+                        <f:selectItem itemLabel="Otra especialidad" itemValue="Otra especialidad" />
+                        <f:selectItem itemLabel="Servicio de urgencia" itemValue="Servicio de urgencia" />
+                    </p:selectOneRadio>
+                    <h:panelGrid columns="2">
+                        <p:radioButton id="opt1" for="customRadio" itemIndex="0" />
+                        <h:outputLabel for="opt1" value="Atendido" />
+                        <p:radioButton id="opt2" for="customRadio" itemIndex="0" />
+                        <h:outputLabel for="opt2" value="No se presentó" />
+                        <p:radioButton id="opt3" for="customRadio" itemIndex="0" />
+                        <h:outputLabel for="opt3" value="Cancelado" />
+                        <p:radioButton id="opt4" for="customRadio" itemIndex="0" />
+                        <h:outputLabel for="opt4" value="No atendido" />
+                        <p:radioButton id="opt5" for="customRadio" itemIndex="0" />
+                        <h:outputLabel for="opt5" value="Alta" />                        
+                        <p:radioButton id="opt6" for="customRadio" itemIndex="0" />
+                        <h:outputLabel for="opt6" value="Hospitalización" />                        
+                        <p:radioButton id="opt7" for="customRadio" itemIndex="0" />
+                        <h:outputLabel for="opt7" value="Otra especialidad" />                        
+                        <p:radioButton id="opt8" for="customRadio" itemIndex="0" />
+                        <h:outputLabel for="opt8" value="Servicio de urgencia" />
+                    </h:panelGrid>
+                </p:outputPanel>
+                <p:panelGrid styleClass="panelGridForm">
+                    <p:row>
+                        <p:column>
+                            <p:commandButton value="Aplicar" icon="ui-icon-check"/>
+                            <p:commandButton value="Finalizar" icon="ui-icon-disk"/>
+                            <p:commandButton value="Cancelar" icon="ui-icon-cancel"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+
+
+    </h:body>
+</html>
